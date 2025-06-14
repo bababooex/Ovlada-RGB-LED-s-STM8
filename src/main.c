@@ -3,7 +3,7 @@
 #include "milis.h"
 #include "stm8s103_lcd_16x2.h"
 #include "stm8s_tim2.h"
-
+//piny pro enkodér a tlačítka
 #define CLK_PIN GPIOB, GPIO_PIN_0
 #define DT_PIN GPIOB, GPIO_PIN_1
 #define SW_PIN GPIOB, GPIO_PIN_2
@@ -16,7 +16,7 @@
 #define BTN6_PIN GPIOC, GPIO_PIN_4
 
 #define BTNMEM_PIN GPIOC, GPIO_PIN_7
-
+//
 int EncoderValue1=50;
 int EncoderValue2=50;
 int EncoderValue3=50;
@@ -258,7 +258,7 @@ void RGB_Animation(void){
     Display_Status();
     Update_PWM();
 		while (RGB_Mode) {
-        for (c = 0; c <= 100 && RGB_Mode; c++) { // RED to GREEN transition
+        for (c = 0; c <= 100 && RGB_Mode; c++) {
             EncoderValue1 = 100 - c;
             EncoderValue2 = c;
             EncoderValue3 = 0;
@@ -271,7 +271,7 @@ void RGB_Animation(void){
                 break;
             }
         }
-        for (c = 0; c <= 100 && RGB_Mode; c++) { // GREEN to BLUE transition
+        for (c = 0; c <= 100 && RGB_Mode; c++) { 
             EncoderValue1 = 0;
             EncoderValue2 = 100 - c;
             EncoderValue3 = c;
@@ -284,7 +284,7 @@ void RGB_Animation(void){
                 break;
             }
         }
-        for (c = 0; c <= 100 && RGB_Mode; c++) { // BLUE to RED transition
+        for (c = 0; c <= 100 && RGB_Mode; c++) { 
             EncoderValue1 = c;
             EncoderValue2 = 0;
             EncoderValue3 = 100 - c;
@@ -482,10 +482,10 @@ void Encoder_Read1(void) {
     static uint8_t lastState1 = 0;
     uint8_t currentState1 = 0;
     
-    // Read encoder state
+
     if (GPIO_ReadInputPin(CLK_PIN)) currentState1 |= 0x01;
     if (GPIO_ReadInputPin(DT_PIN)) currentState1 |= 0x02;
-    // Encoder rotation logic
+
     if (lastState1 == 0x00 && currentState1 == 0x01) (EncoderValue1)++;
     else if (lastState1 == 0x01 && currentState1 == 0x03) (EncoderValue1)++;
     else if (lastState1 == 0x03 && currentState1 == 0x02) (EncoderValue1)++;
@@ -502,10 +502,10 @@ void Encoder_Read2(void) {
     static uint8_t lastState2 = 0;
     uint8_t currentState2 = 0;
     
-    // Read encoder state
+
     if (GPIO_ReadInputPin(CLK_PIN)) currentState2 |= 0x01;
     if (GPIO_ReadInputPin(DT_PIN)) currentState2 |= 0x02;
-    // Encoder rotation logic
+
     if (lastState2 == 0x00 && currentState2 == 0x01) (EncoderValue2)++;
     else if (lastState2 == 0x01 && currentState2 == 0x03) (EncoderValue2)++;
     else if (lastState2 == 0x03 && currentState2 == 0x02) (EncoderValue2)++;
@@ -522,10 +522,10 @@ void Encoder_Read3(void) {
     static uint8_t lastState3 = 0;
     uint8_t currentState3 = 0;
     
-    // Read encoder state
+
     if (GPIO_ReadInputPin(CLK_PIN)) currentState3 |= 0x01;
     if (GPIO_ReadInputPin(DT_PIN)) currentState3 |= 0x02;
-    // Encoder rotation logic
+
     if (lastState3 == 0x00 && currentState3 == 0x01) (EncoderValue3)++;
     else if (lastState3 == 0x01 && currentState3 == 0x03) (EncoderValue3)++;
     else if (lastState3 == 0x03 && currentState3 == 0x02) (EncoderValue3)++;
@@ -538,11 +538,11 @@ void Encoder_Read3(void) {
     if (EncoderValue3 > 100) EncoderValue3 = 100;
     if (EncoderValue3 < 0) EncoderValue3 = 0;	
 }
-
+//PWM-všechny kanály
 void PWM_Init(void) {
-    GPIO_Init(GPIOD, GPIO_PIN_4, GPIO_MODE_OUT_PP_LOW_SLOW); // TIM2_CH1 (PD4)
-    GPIO_Init(GPIOD, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_SLOW); // TIM2_CH2 (PD3)
-    GPIO_Init(GPIOA, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_SLOW); // TIM2_CH3 (PA3)
+    GPIO_Init(GPIOD, GPIO_PIN_4, GPIO_MODE_OUT_PP_LOW_SLOW); 
+    GPIO_Init(GPIOD, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_SLOW);
+    GPIO_Init(GPIOA, GPIO_PIN_3, GPIO_MODE_OUT_PP_LOW_SLOW); 
     TIM2_TimeBaseInit(TIM2_PRESCALER_16, 999);
     TIM2_OC1Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 0, TIM2_OCPOLARITY_LOW);
     TIM2_OC2Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 0, TIM2_OCPOLARITY_LOW);
@@ -565,7 +565,7 @@ void Update_PWM(void) {
     TIM2_SetCompare2(EncoderValue2 * 10);
     TIM2_SetCompare3(EncoderValue3 * 10);  
 }
-
+//změna LEDky na displeji
 void Display_Status(void) {
 		Lcd_Print_Int_At1(2, 2, EncoderValue1);  
 		Lcd_Print_Int_At2(2, 7, EncoderValue2); 
