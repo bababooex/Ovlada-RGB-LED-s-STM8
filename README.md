@@ -1,1 +1,1 @@
-# Ovlada-RGB-LED-s-STM8
+# Ovladač-RGB-LED-s-STM8
