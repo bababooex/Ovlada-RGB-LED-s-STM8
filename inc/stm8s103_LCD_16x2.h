@@ -22,7 +22,7 @@
  void Lcd_Print_Int_At2(uint8_t row, uint8_t col, int number);
  void Lcd_Print_Int_At3(uint8_t row, uint8_t col, int number);
 
-
+//funkce pro 3 čísla na jednotlivé barvy
 int32_t i;
 int32_t j;
 int32_t k;
@@ -96,7 +96,7 @@ void Lcd_Print_Int_At3(uint8_t row, uint8_t col, int number) {
     }
 }
 
-
+//
  void Lcd_SetBit(char data_bit) 
 {
     if(data_bit& 1) 
